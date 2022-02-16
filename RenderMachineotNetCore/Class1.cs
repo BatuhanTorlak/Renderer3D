@@ -58,7 +58,7 @@ namespace RenderMachineDotNetCore
 
             double RotMinX = Rotation.x - (int)Size.x * DegreePerPx;
             double RotMinY = Rotation.y - (int)Size.y * DegreePerPx;
-            rotation_ rotMax = new rotation_(Rotation.x + (int)Size.x * DegreePerPx, Rotation.y + (int)Size.y * DegreePerPx, 0, 90, 180);
+            rotation_ rotMax = new rotation_(Rotation.x + (int)Size.x * DegreePerPx, Rotation.y + (int)Size.y * DegreePerPx);
 
             Console.WriteLine($"{RotMinX} ! {RotMinY} | {rotMax.x} ! {rotMax.y}");
 
@@ -448,6 +448,10 @@ namespace RenderMachineDotNetCore
 
             return y;
         }
+        public static double Limit(double x, double y)
+        {
+            return x - (y * (int)(x / y));
+        }
         public static double Distance(position x, position y)
         {
             double a1 = SubstractLittleFromBigger(x.x, y.x);
@@ -466,7 +470,7 @@ namespace RenderMachineDotNetCore
         {
             // double O = Math.Atan(ps.x / ps.z);
             // double oT = Math.Acos(ps.y / MathB.Distance(new position(0, 0, 0), ps));
-            rotation_ rot = new rotation_(Math.Acos(Pos.y / Distance(new position(0, 0, 0), Pos)) * 45, Math.Atan(Pos.x / Pos.z) * 90, 0, 90, 180);
+            rotation_ rot = new rotation_(Math.Acos(Pos.y / Distance(new position(0, 0, 0), Pos)) * 180, Math.Atan(Pos.x / Pos.z) * 180);
 
             return rot;
         }
@@ -564,75 +568,81 @@ namespace RenderMachineDotNetCore
 
     public struct rotation_
     {
-        public static bool operator ==(rotation_ x, rotation_ y) { return (x.x == y.x && x.y == y.y && x.z == y.z); }
+        public static bool operator ==(rotation_ x, rotation_ y) { return (x.x == y.x && x.y == y.y); }
         public static bool operator !=(rotation_ x, rotation_ y) { return !(x == y); }
 
         internal double x { get; set; }
         internal double y { get; set; }
-        internal double z { get; set; }
-        internal rotation_(double x, double y, double z, double W1, double W2)
+        internal rotation_(double x, double y, double Xmax, double Xmin, double Ymax, double Ymin, double Yplus)
         {
-            if (x > 0)
+            if (x > Xmax)
             {
-                this.x = MathB.SetPositive(x) - W1 * (int)(MathB.SetPositive(x) / W1);
-                /*if (x > W1)
-                {
-                    this.x = W1 - this.x;
-                }*/
+                y += Yplus;
+                this.x = MathB.Limit(x, Xmax);
+            }
+            else if (x < Xmin)
+            {
+                y += Yplus;
+                this.x = Xmin - MathB.Limit(x, Xmin);
             }
             else
             {
-                this.x = MathB.SetPositive(x) - W1 * (int)(MathB.SetPositive(x) / W1);
-                this.x = -this.x;
-                /*if (-x > W1)
-                {
-                    this.x = -W1 - this.x;
-                }*/
+                this.x = x;
             }
-            if (y > 0)
+
+            if (y > Ymax)
             {
-                this.y = MathB.SetPositive(y) - W2 * (int)(MathB.SetPositive(y) / W2);
-                /*if (y > W2)
-                {
-                    this.x = W2 - this.x;
-                }*/
+                this.y = MathB.Limit(y, Ymax);
+            }
+            else if (y < Ymin)
+            {
+                this.y = Ymax - MathB.Limit(y, Ymax);
             }
             else
             {
-                this.y = MathB.SetPositive(y) - W2 * (int)(MathB.SetPositive(y) / W2);
-                this.y = -this.y;
-                /*if (-y > W2)
-                {
-                    this.x = -W2 - this.x;
-                }*/
+                this.y = y;
             }
-            if (z > 0)
+        }
+
+        internal rotation_(double x, double y)
+        {
+            if (x > 180)
             {
-                this.z = MathB.SetPositive(z) - W1 * (int)(MathB.SetPositive(z) / W1);
-                /*if (z > W1)
-                {
-                    this.z = -W1 - this.z;
-                }*/
+                y += 180;
+                this.x = MathB.Limit(x, 180);
+            }
+            else if (x < 0)
+            {
+                y += 180;
+                this.x = MathB.Limit(-x, 180);
             }
             else
             {
-                this.z = MathB.SetPositive(z) - W1 * (int)(MathB.SetPositive(z) / W1);
-                this.z = -this.z;
-                /*if (-z > W1)
-                {
-                    this.z = -W1 - this.z;
-                }*/
+                this.x = x;
+            }
+
+            if (y > 360)
+            {
+                this.y = MathB.Limit(y, 360);
+            }
+            else if (y < 0)
+            {
+                this.y = 360 - MathB.Limit(-y, 360);
+            }
+            else
+            {
+                this.y = y;
             }
         }
 
         public override string ToString()
         {
-            return $"rotation_({x}, {y}, {z})";
+            return $"rotation_({x}, {y})";
         }
 
         public rotation ToRotation()
         {
-            return new rotation(x, y, z);
+            return new rotation(x, y, 0);
         }
     }
 
@@ -712,7 +722,7 @@ namespace RenderMachineDotNetCore
     public class Object3D
     {
         internal rotation _rotation;
-        internal Point[] _verticals;
+        internal List<Point> _verticals = new List<Point>();
 
         public position Position;
         public size Size;
@@ -729,7 +739,7 @@ namespace RenderMachineDotNetCore
             }
         }
         internal string path { get; set; }
-        public Point[] verticals
+        public List<Point> verticals
         {
             get
             {
@@ -742,7 +752,7 @@ namespace RenderMachineDotNetCore
             }
         }
 
-        public Triangle[] Triangles;
+        public List<Triangle> Triangles = new List<Triangle>();
 
         public List<Component> Components = new List<Component>();
 
@@ -755,16 +765,16 @@ namespace RenderMachineDotNetCore
 
         private void SetVerticals()
         {
-            Verticals = new Point[_verticals.Length];
-            for (int c = 0; c < _verticals.Length; c++)
+            Verticals = new Point[_verticals.Count()];
+            for (int c = 0; c < _verticals.Count(); c++)
             {
                 double r = MathB.Distance(_verticals[c].position, new position(0, 0, 0));
 
                 //if (_verticals[c].Azimut < 0)
                 Verticals[c] = new Point(
-                    r * Math.Sin(new rotation_(0, _verticals[c].Azimut + Rotation.y, 0, 90, 180).y) * Math.Sin(new rotation_(_verticals[c].Zenit + Rotation.x, 0, 0, 90, 180).x),
-                    r * Math.Cos(new rotation_(_verticals[c].Zenit + Rotation.x, 0, 0, 90, 180).x),
-                    r * Math.Cos(new rotation_(0, _verticals[c].Azimut + Rotation.y, 0, 90, 180).y) * Math.Sin(new rotation_(_verticals[c].Zenit + Rotation.x, 0, 0, 90, 180).x)
+                    r * Math.Sin(new rotation_(0, _verticals[c].Azimut + Rotation.y).y) * Math.Sin(new rotation_(_verticals[c].Zenit + Rotation.x, 0).x),
+                    r * Math.Cos(new rotation_(_verticals[c].Zenit + Rotation.x, 0).x),
+                    r * Math.Cos(new rotation_(0, _verticals[c].Azimut + Rotation.y).y) * Math.Sin(new rotation_(_verticals[c].Zenit + Rotation.x, 0).x)
                     );
             }
         }
@@ -781,7 +791,7 @@ namespace RenderMachineDotNetCore
             o.Size = new size(1, 1, 1);
 
             o.path = "Default";
-            o._verticals = new Point[8] {
+            o._verticals.AddRange(new Point[8] {
                 new Point(0.5f,0.5f,0.5f), //0.5f,0.5f,0.5f 0
                 new Point(-0.5f,0.5f,-0.5f), //-0.5f,0.5f,-0.5f 1
                 new Point(0.5f,0.5f,-0.5f), //0.5f,0.5f,-0.5f 2
@@ -790,16 +800,16 @@ namespace RenderMachineDotNetCore
                 new Point(-0.5f,-0.5f,-0.5f), //-0.5f,-0.5f,-0.5f 5
                 new Point(0.5f,-0.5f,-0.5f), //0.5f,-0.5f,-0.5f 6
                 new Point(-0.5f,-0.5f,0.5f) //-0.5f,-0.5f,0.5f 7
-            };
+            });
 
-            o.Verticals = new Point[o._verticals.Length];
+            o.Verticals = new Point[o._verticals.Count()];
 
-            for (int x = 0; x < o._verticals.Length; x++)
+            for (int x = 0; x < o._verticals.Count(); x++)
             {
                 o.Verticals[x] = o._verticals[x].GetPoint();
             }
 
-            o.Triangles = new Triangle[12] {
+            o.Triangles.AddRange(new Triangle[12] {
                 new Triangle(o.Verticals[4], o.Verticals[7], o.Verticals[3]),
                 new Triangle(o.Verticals[4], o.Verticals[0], o.Verticals[3]),
                 new Triangle(o.Verticals[1], o.Verticals[0], o.Verticals[3]),
@@ -812,9 +822,7 @@ namespace RenderMachineDotNetCore
                 new Triangle(o.Verticals[6], o.Verticals[5], o.Verticals[4]),
                 new Triangle(o.Verticals[6], o.Verticals[2], o.Verticals[4]),
                 new Triangle(o.Verticals[6], o.Verticals[2], o.Verticals[2])
-            };
-
-            //Camera.Objects.Add(o);
+            });
 
             return o;
         }
@@ -829,16 +837,16 @@ namespace RenderMachineDotNetCore
             o.verticals = GetVerticals(path);
             o.path = GetPath(path);
 
-            o.Verticals = new Point[o._verticals.Length];
+            o.Verticals = new Point[o._verticals.Count()];
 
-            for (int x = 0; x < o._verticals.Length; x++)
+            for (int x = 0; x < o._verticals.Count(); x++)
             {
                 o.Verticals[x] = o._verticals[x].GetPoint();
             }
 
             if (o.path == "Default")
             {
-                o.Triangles = new Triangle[12] {
+                o.Triangles.AddRange(new Triangle[12] {
                     new Triangle(o.Verticals[4], o.Verticals[7], o.Verticals[3]),
                     new Triangle(o.Verticals[4], o.Verticals[0], o.Verticals[3]),
                     new Triangle(o.Verticals[1], o.Verticals[0], o.Verticals[3]),
@@ -851,10 +859,8 @@ namespace RenderMachineDotNetCore
                     new Triangle(o.Verticals[6], o.Verticals[5], o.Verticals[4]),
                     new Triangle(o.Verticals[6], o.Verticals[2], o.Verticals[4]),
                     new Triangle(o.Verticals[6], o.Verticals[2], o.Verticals[2])
-                };
+                });
             }
-
-            //Camera.Objects.Add(o);
 
             return o;
         }
@@ -994,9 +1000,9 @@ namespace RenderMachineDotNetCore
             return path;
         }
 
-        public static Point[] GetVerticals(string path)
+        public static List<Point> GetVerticals(string path)
         {
-            Point[] verticals = new Point[0];
+            List<Point> verticals = new List<Point>();
 
             if (path.Length > 5)
             {
@@ -1017,8 +1023,6 @@ namespace RenderMachineDotNetCore
 
                     if (VerticalCount > 0)
                     {
-                        verticals = new Point[VerticalCount];
-
                         int countIndex = 0;
                         foreach (var oVer in Data)
                         {
@@ -1072,12 +1076,12 @@ namespace RenderMachineDotNetCore
                             }
                             if (VerPosX != null && VerPosY != null && VerPosZ != null)
                             {
-                                verticals[countIndex] =
+                                verticals.Add(
                                     new Point(
                                         Convert.ToSingle(VerPosX),
                                         Convert.ToSingle(VerPosY),
                                         Convert.ToSingle(VerPosZ)
-                                );
+                                ));
 
                                 countIndex++;
                             }
@@ -1086,7 +1090,7 @@ namespace RenderMachineDotNetCore
                     else
                     {
                         path = "Default";
-                        verticals = new Point[8] {
+                        verticals.AddRange(new Point[8] {
                         new Point(0.5f,0.5f,0.5f),
                         new Point(-0.5f,0.5f,-0.5f),
                         new Point(0.5f,0.5f,-0.5f),
@@ -1095,13 +1099,13 @@ namespace RenderMachineDotNetCore
                         new Point(-0.5f,-0.5f,-0.5f),
                         new Point(0.5f,-0.5f,-0.5f),
                         new Point(-0.5f,-0.5f,0.5f)
-                        };
+                        });
                     }
                 }
                 else
                 {
                     path = "Default";
-                    verticals = new Point[8] {
+                    verticals.AddRange(new Point[8] {
                         new Point(0.5f,0.5f,0.5f),
                         new Point(-0.5f,0.5f,-0.5f),
                         new Point(0.5f,0.5f,-0.5f),
@@ -1110,13 +1114,13 @@ namespace RenderMachineDotNetCore
                         new Point(-0.5f,-0.5f,-0.5f),
                         new Point(0.5f,-0.5f,-0.5f),
                         new Point(-0.5f,-0.5f,0.5f)
-                    };
+                    });
                 }
             }
             else
             {
                 path = "Default";
-                verticals = new Point[8] {
+                verticals.AddRange(new Point[8] {
                     new Point(0.5f,0.5f,0.5f),
                     new Point(-0.5f,0.5f,-0.5f),
                     new Point(0.5f,0.5f,-0.5f),
@@ -1125,7 +1129,7 @@ namespace RenderMachineDotNetCore
                     new Point(-0.5f,-0.5f,-0.5f),
                     new Point(0.5f,-0.5f,-0.5f),
                     new Point(-0.5f,-0.5f,0.5f)
-                };
+                });
             }
             return verticals;
         }

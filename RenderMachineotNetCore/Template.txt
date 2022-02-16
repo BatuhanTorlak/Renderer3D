@@ -1,0 +1,42 @@
+﻿using System;
+using RenderMachineDotNetCore;
+
+namespace Apozin
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Proje proje = new Proje();
+            DefaultFuncs.Setup(225, 150);
+
+            DefaultFuncs.DeltaTimer();
+            DefaultFuncs.DeltaTimer();
+
+            proje.Setup();
+            while (true)
+            {
+                DefaultFuncs.DeltaTimer();
+
+                Camera.Render();
+
+                proje.Loop();
+            }
+        }
+    }
+
+    public class Proje
+    {
+        Object3D obj = Generators.GetObject3D();
+        public void Setup()
+        {
+            Camera.Objects.Add(obj);
+            obj.Position = new position(100, 0, 0);
+        }
+
+        public void Loop()
+        {
+            
+        }
+    }
+}
