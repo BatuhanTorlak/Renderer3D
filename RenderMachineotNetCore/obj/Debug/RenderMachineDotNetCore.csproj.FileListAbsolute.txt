@@ -1,6 +1,8 @@
-C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineotNetCore.dll
-C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineotNetCore.pdb
 C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.csprojAssemblyReference.cache
 C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.csproj.CoreCompileInputs.cache
-C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineotNetCore.dll
-C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineotNetCore.pdb
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\Interop.SystemMonitor.dll
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.csproj.ResolveComReference.cache
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineDotNetCore.dll
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineDotNetCore.pdb
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.dll
+C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.pdb

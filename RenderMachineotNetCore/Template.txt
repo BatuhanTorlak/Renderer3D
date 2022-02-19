@@ -31,7 +31,6 @@ namespace Apozin
         public void Setup()
         {
             Camera.Objects.Add(obj);
-            obj.Position = new position(100, 0, 0);
         }
 
         public void Loop()
