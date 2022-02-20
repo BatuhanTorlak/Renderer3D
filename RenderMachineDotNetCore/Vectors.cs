@@ -175,13 +175,60 @@ namespace RenderMachineDotNetCore
         }
     }
 
+    public struct Color
+    {
+        public static Color operator +(Color a, Color b) => new Color(
+            (byte)(a.Red * a.Transparency + b.Red * b.Transparency), 
+            (byte)(a.Green * a.Transparency + b.Green * b.Transparency), (byte)(a.Blue * a.Transparency + b.Blue * b.Transparency), 
+            (byte)MathB.GetBigger(a.getTransparency(), b.getTransparency())
+            );
+
+        public byte Red;
+        public byte Blue;
+        public byte Green;
+        public byte Transparency
+        {
+            set
+            {
+                Transparency = (byte)(value / byte.MaxValue / 100);
+            }
+            get
+            {
+                return Transparency;
+            }
+        }
+
+        public Color(byte r, byte g, byte b, byte t)
+        {
+            Red = r;
+            Green = g;
+            Blue = b;
+            Transparency = t;
+        }
+
+        public byte getTransparency()
+        {
+            return (byte)(Transparency * byte.MaxValue / 100);
+        }
+    }
+
     public class Triangle
     {
         public Point[] verticals = new Point[3];
+        public byte transparency;
+        public byte[] color;
 
         public Triangle(Point px, Point py, Point pz)
         {
             this.verticals = new Point[3] { px, py, pz };
+            transparency = byte.MaxValue;
+        }
+
+        public Triangle(Point px, Point py, Point pz, byte trs, byte[] colors)
+        {
+            this.verticals = new Point[3] { px, py, pz };
+            transparency = trs;
+            color = colors;
         }
 
         public void SetVerticals(Point px, Point py, Point pz)

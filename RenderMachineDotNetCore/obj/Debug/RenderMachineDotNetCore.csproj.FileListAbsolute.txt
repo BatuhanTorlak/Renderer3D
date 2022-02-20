@@ -6,3 +6,11 @@ C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineDotNetC
 C:\Users\MMFH\source\repos\RenderMachineotNetCore\bin\Debug\RenderMachineDotNetCore.pdb
 C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.dll
 C:\Users\MMFH\source\repos\RenderMachineotNetCore\obj\Debug\RenderMachineDotNetCore.pdb
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\bin\Debug\RenderMachineDotNetCore.dll
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\bin\Debug\RenderMachineDotNetCore.pdb
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\RenderMachineDotNetCore.csprojAssemblyReference.cache
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\Interop.SystemMonitor.dll
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\RenderMachineDotNetCore.csproj.ResolveComReference.cache
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\RenderMachineDotNetCore.csproj.CoreCompileInputs.cache
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\RenderMachineDotNetCore.dll
+D:\Dosyalar\github şeysileri\Renderer3D\RenderMachineDotNetCore\obj\Debug\RenderMachineDotNetCore.pdb
