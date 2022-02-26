@@ -813,7 +813,7 @@ namespace RenderMachineDotNetCore
         }
         public static double GetCloseToZero(double x)
         {
-            return x == 0 && x == double.NaN ? Epsilon : x;
+            return x == 0 || x == double.NaN ? Epsilon : x;
         }
         public static double NegativeLimit(double x, double y)
         {
@@ -836,7 +836,7 @@ namespace RenderMachineDotNetCore
         {
             rotation rot = new rotation(
                 (int)RadianToDegree(Math.Acos(GetCloseToZero(Pos.y / Distance(new position(0, 0, 0), Pos)))), 
-                (int)RadianToDegree(Math.Atan(GetCloseToZero(Pos.x / Pos.z)) + (Pos.x < 0 ? Radian : 0)));
+                (int)RadianToDegree(Math.Atan(GetCloseToZero(Pos.x / Pos.z))));
 
             return rot;
         }
@@ -846,13 +846,32 @@ namespace RenderMachineDotNetCore
             /*double Azimut = Limit(DegreeToRadian(rot.y % 90 != 0 ? rot.y : rot.y + Epsilon), RadianToDegree(2)),
                 Zenit = Limit(DegreeToRadian(rot.x % 90 != 0 ? rot.x : rot.x + Epsilon), RadianToDegree(1));*/
 
+            //int Azimut = rot.y;
+
+            int Azimut = new rotation(0, rot.y + ((rot.y < 270) ? (180) : ((rot.y > 90) ? (180) : (0))), 0).y;
+            int Zenit = rot.x;
+            /*
+            if (Zenit <= 180)
+            {
+                Zenit %= 90;
+            }
+
+            if (Zenit > 270)
+            {
+                Zenit %= 270;
+                Zenit += 180;
+            }
+            */
+            Console.WriteLine($"Sin({Zenit}) = {Sins[Zenit]}");
+            Console.WriteLine($"Sin({Zenit}) * r = {Sins[Zenit]} * {r}");
+
             position pos = new position(/*
                 r * (Math.Sin(Azimut)) * (Math.Sin(Zenit)),
                 r * (Limit(rot.x, 360) > 180 ? -Math.Cos(Zenit) : Math.Cos(Zenit)),
                 r * (Math.Cos(Azimut)) * (Math.Sin(Zenit))*/
-                r * Sins[rot.y] * Sins[rot.x],
-                r * Coss[rot.x],
-                r * Coss[rot.y] * Sins[rot.x]
+                r * Sins[Azimut] * Coss[Zenit],
+                r * Sins[Zenit],
+                r * Coss[Azimut] * Coss[Zenit]
                 );
 
             return pos;

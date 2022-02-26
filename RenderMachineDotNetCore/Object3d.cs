@@ -63,6 +63,20 @@ namespace RenderMachineDotNetCore
 
     public static class Generators
     {
+        public static Point[] DefaultPoints(int x)
+        {
+            return new Point[8]
+            {
+                new Point(x, x, x), //0.5f,0.5f,0.5f 0
+                new Point(-x, x, -x), //-0.5f,0.5f,-0.5f x
+                new Point(x, x, -x), //0.5f,0.5f,-0.5f 2
+                new Point(-x, x, x), //-0.5f,0.5f,0.5f 3 
+                new Point(x, -x, x), //0.5f,-0.5f,0.5f 4 
+                new Point(-x, -x, -x), //-0.5f,-0.5f,-0.5f 5
+                new Point(x, -x, -x), //0.5f,-0.5f,-0.5f 6
+                new Point(-x, -x, x) //-0.5f,-0.5f,0.5f 7
+            };
+        }
         public static Object3D GetObject3D()
         {
             Object3D o = new Object3D();
@@ -72,16 +86,7 @@ namespace RenderMachineDotNetCore
             o.Size = new size(1, 1, 1);
 
             o.path = "Default";
-            o._verticals.AddRange(new Point[8] {
-                new Point(0.5f,0.5f,0.5f), //0.5f,0.5f,0.5f 0
-                new Point(-0.5f,0.5f,-0.5f), //-0.5f,0.5f,-0.5f 1
-                new Point(0.5f,0.5f,-0.5f), //0.5f,0.5f,-0.5f 2
-                new Point(-0.5f,0.5f,0.5f), //-0.5f,0.5f,0.5f 3 
-                new Point(0.5f,-0.5f,0.5f), //0.5f,-0.5f,0.5f 4 
-                new Point(-0.5f,-0.5f,-0.5f), //-0.5f,-0.5f,-0.5f 5
-                new Point(0.5f,-0.5f,-0.5f), //0.5f,-0.5f,-0.5f 6
-                new Point(-0.5f,-0.5f,0.5f) //-0.5f,-0.5f,0.5f 7
-            });
+            o._verticals.AddRange(DefaultPoints(1));
 
             o.Verticals = new Point[o._verticals.Count()];
 
@@ -270,46 +275,19 @@ namespace RenderMachineDotNetCore
                     else
                     {
                         path = "Default";
-                        verticals.AddRange(new Point[8] {
-                        new Point(0.5f,0.5f,0.5f),
-                        new Point(-0.5f,0.5f,-0.5f),
-                        new Point(0.5f,0.5f,-0.5f),
-                        new Point(-0.5f,0.5f,0.5f),
-                        new Point(0.5f,-0.5f,0.5f),
-                        new Point(-0.5f,-0.5f,-0.5f),
-                        new Point(0.5f,-0.5f,-0.5f),
-                        new Point(-0.5f,-0.5f,0.5f)
-                        });
+                        verticals.AddRange(DefaultPoints(1));
                     }
                 }
                 else
                 {
                     path = "Default";
-                    verticals.AddRange(new Point[8] {
-                        new Point(0.5f,0.5f,0.5f),
-                        new Point(-0.5f,0.5f,-0.5f),
-                        new Point(0.5f,0.5f,-0.5f),
-                        new Point(-0.5f,0.5f,0.5f),
-                        new Point(0.5f,-0.5f,0.5f),
-                        new Point(-0.5f,-0.5f,-0.5f),
-                        new Point(0.5f,-0.5f,-0.5f),
-                        new Point(-0.5f,-0.5f,0.5f)
-                    });
+                    verticals.AddRange(DefaultPoints(1));
                 }
             }
             else
             {
                 path = "Default";
-                verticals.AddRange(new Point[8] {
-                    new Point(0.5f,0.5f,0.5f),
-                    new Point(-0.5f,0.5f,-0.5f),
-                    new Point(0.5f,0.5f,-0.5f),
-                    new Point(-0.5f,0.5f,0.5f),
-                    new Point(0.5f,-0.5f,0.5f),
-                    new Point(-0.5f,-0.5f,-0.5f),
-                    new Point(0.5f,-0.5f,-0.5f),
-                    new Point(-0.5f,-0.5f,0.5f)
-                });
+                verticals.AddRange(DefaultPoints(1));
             }
             return verticals;
         }
