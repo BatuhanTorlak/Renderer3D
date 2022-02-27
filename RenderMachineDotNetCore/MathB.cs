@@ -841,48 +841,30 @@ namespace RenderMachineDotNetCore
             return rot;
         }
 
-        public static position SphereToCartesien(rotation rot, double r)
+        public static position SphereToCartesien(rotation rot, double r, bool XPos, bool ZPos)
         {
-            /*double Azimut = Limit(DegreeToRadian(rot.y % 90 != 0 ? rot.y : rot.y + Epsilon), RadianToDegree(2)),
-                Zenit = Limit(DegreeToRadian(rot.x % 90 != 0 ? rot.x : rot.x + Epsilon), RadianToDegree(1));*/
-
-            //int Azimut = rot.y;
-
-            int Azimut = new rotation(0, rot.y + ((rot.y < 270) ? (180) : ((rot.y > 90) ? (180) : (0))), 0).y;
+            rotation Azimut = new rotation(0, rot.y + ((rot.y > 270) ? (0) : ((rot.y > 90) ? (180) : (0))), 0);
             int Zenit = rot.x;
-            /*
-            if (Zenit <= 180)
-            {
-                Zenit %= 90;
-            }
 
-            if (Zenit > 270)
-            {
-                Zenit %= 270;
-                Zenit += 180;
-            }
-            */
-            Console.WriteLine($"Sin({Zenit}) = {Sins[Zenit]}");
-            Console.WriteLine($"Sin({Zenit}) * r = {Sins[Zenit]} * {r}");
+            double X = r * Sins[Zenit] * Sins[Azimut.y];
+            double Y = r * Coss[Zenit];
+            double Z = r * Coss[Zenit] * Sins[Azimut.y];
 
-            position pos = new position(/*
-                r * (Math.Sin(Azimut)) * (Math.Sin(Zenit)),
-                r * (Limit(rot.x, 360) > 180 ? -Math.Cos(Zenit) : Math.Cos(Zenit)),
-                r * (Math.Cos(Azimut)) * (Math.Sin(Zenit))*/
-                r * Sins[Azimut] * Coss[Zenit],
-                r * Sins[Zenit],
-                r * Coss[Azimut] * Coss[Zenit]
+            position pos = new position(
+                XPos ? X : -X,
+                Y,
+                ZPos ? Z : -Z
                 );
 
             return pos;
         }
 
-        internal static double DegreeToRadian(double angle)
+        public static double DegreeToRadian(double angle)
         {
             return Math.PI * angle / 180.0;
         }
 
-        internal static double RadianToDegree(double angle)
+        public static double RadianToDegree(double angle)
         {
             return angle * (180.0 / Math.PI);
         }

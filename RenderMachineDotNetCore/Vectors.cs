@@ -84,17 +84,17 @@ namespace RenderMachineDotNetCore
 
         public rotation(int x, int y, int z)
         {
-            this.x = (int)MathB.SetPositive(x) - 360 * (int)(MathB.SetPositive(x) / 360);
+            this.x = (int)(MathB.SetPositive(x) % 360);
             if (x < 0)
             {
                 this.x = 360 - this.x;
             }
-            this.y = (int)MathB.SetPositive(y) - 360 * (int)(MathB.SetPositive(y) / 360);
+            this.y = (int)(MathB.SetPositive(y) % 360);
             if (y < 0)
             {
                 this.y = 360 - this.y;
             }
-            this.z = (int)MathB.SetPositive(z) - 360 * (int)(MathB.SetPositive(z) / 360);
+            this.z = (int)(MathB.SetPositive(z) % 360);
             if (z < 0)
             {
                 this.z = 360 - this.z;
@@ -149,6 +149,8 @@ namespace RenderMachineDotNetCore
         public double r;
         public double Zenit;
         public double Azimut;
+        internal bool XPos;
+        internal bool ZPos;
 
         internal Point GetPoint(size siz)
         {
@@ -161,6 +163,10 @@ namespace RenderMachineDotNetCore
         {
             _position = p;
             r = MathB.Distance(new position(0, 0, 0), p);
+
+            XPos = p.x >= 0;
+            ZPos = p.z >= 0;
+
             rotation rot = MathB.CartesienToSphere(_position);
             Zenit = rot.x;
             Azimut = rot.y;
