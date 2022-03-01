@@ -836,24 +836,24 @@ namespace RenderMachineDotNetCore
         {
             rotation rot = new rotation(
                 (int)RadianToDegree(Math.Acos(GetCloseToZero(Pos.y / Distance(new position(0, 0, 0), Pos)))), 
-                (int)RadianToDegree(Math.Atan(GetCloseToZero(Pos.x / Pos.z))));
+                (int)RadianToDegree(Math.Atan2(GetCloseToZero(Pos.x), GetCloseToZero(Pos.z))));
 
             return rot;
         }
 
-        public static position SphereToCartesien(rotation rot, double r, bool XPos, bool ZPos)
+        public static position SphereToCartesien(rotation rot, double r)
         {
-            rotation Azimut = new rotation(0, rot.y + ((rot.y > 270) ? (0) : ((rot.y > 90) ? (180) : (0))), 0);
+            rotation Azimut = new rotation(0, rot.y + ((rot.x > 270) ? (0) : ((rot.x > 90) ? (180) : (0))), 0);
             int Zenit = rot.x;
 
-            double X = r * Sins[Zenit] * Sins[Azimut.y];
+            double X = r * (Sins[Zenit]) * Sins[Azimut.y];
             double Y = r * Coss[Zenit];
-            double Z = r * Coss[Zenit] * Sins[Azimut.y];
+            double Z = r * (Sins[Zenit]) * Coss[Azimut.y];
 
             position pos = new position(
-                XPos ? X : -X,
+                X,
                 Y,
-                ZPos ? Z : -Z
+                Z
                 );
 
             return pos;

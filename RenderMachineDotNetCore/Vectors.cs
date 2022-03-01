@@ -82,20 +82,20 @@ namespace RenderMachineDotNetCore
         public int y { get; set; }
         public int z { get; set; }
 
-        public rotation(int x, int y, int z)
+        public rotation(int xi, int yi, int zi)
         {
-            this.x = (int)(MathB.SetPositive(x) % 360);
-            if (x < 0)
+            this.x = (int)(MathB.SetPositive(xi) % 360);
+            if (xi < 0)
             {
                 this.x = 360 - this.x;
             }
-            this.y = (int)(MathB.SetPositive(y) % 360);
-            if (y < 0)
+            this.y = (int)(MathB.SetPositive(yi) % 360);
+            if (yi < 0)
             {
                 this.y = 360 - this.y;
             }
-            this.z = (int)(MathB.SetPositive(z) % 360);
-            if (z < 0)
+            this.z = (int)(MathB.SetPositive(zi) % 360);
+            if (zi < 0)
             {
                 this.z = 360 - this.z;
             }
@@ -103,17 +103,7 @@ namespace RenderMachineDotNetCore
 
         public rotation(int x, int y)
         {
-            this.x = (int)MathB.SetPositive(x) - 360 * (int)(MathB.SetPositive(x) / 360);
-            if (x < 0)
-            {
-                this.x = 360 - this.x;
-            }
-            this.y = (int)MathB.SetPositive(y) - 360 * (int)(MathB.SetPositive(y) / 360);
-            if (y < 0)
-            {
-                this.y = 360 - this.y;
-            }
-            this.z = 0;
+            this = new rotation(x, y, 0);
         }
 
         public override string ToString()
@@ -143,14 +133,11 @@ namespace RenderMachineDotNetCore
             set
             {
                 _position = value;
-                this = GetPoint(new size(1, 1, 1));
             }
         }
         public double r;
         public double Zenit;
         public double Azimut;
-        internal bool XPos;
-        internal bool ZPos;
 
         internal Point GetPoint(size siz)
         {
@@ -161,20 +148,19 @@ namespace RenderMachineDotNetCore
 
         public Point(position p)
         {
-            _position = p;
             r = MathB.Distance(new position(0, 0, 0), p);
 
-            XPos = p.x >= 0;
-            ZPos = p.z >= 0;
-
+            _position = p;
             rotation rot = MathB.CartesienToSphere(_position);
             Zenit = rot.x;
             Azimut = rot.y;
         }
+
         public Point(double x, double y, double z)
         {
             this = new Point(new position(x, y, z));
         }
+
         public override string ToString()
         {
             return $"point({position.x}, {position.y}, {position.z})";

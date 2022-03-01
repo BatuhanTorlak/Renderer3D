@@ -56,7 +56,7 @@ namespace RenderMachineDotNetCore
             Verticals = new Point[_verticals.Count()];
             for (int c = 0; c < _verticals.Count(); c++)
             {
-                Verticals[c] = new Point(MathB.SphereToCartesien(new rotation((int)_verticals[c].Zenit + _rotation.x, (int)_verticals[c].Azimut + _rotation.y), MathB.Distance(new position(0, 0, 0), _verticals[c].position * Size), _verticals[c].XPos, _verticals[c].ZPos));
+                Verticals[c] = new Point(MathB.SphereToCartesien(new rotation((int)_verticals[c].Zenit + _rotation.x, (int)_verticals[c].Azimut + _rotation.y), MathB.Distance(new position(0, 0, 0), _verticals[c].position * Size)));
             }
         }
     }
