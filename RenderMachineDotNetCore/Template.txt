@@ -18,7 +18,7 @@ namespace Apozin
             {
                 DefaultFuncs.DeltaTimer();
 
-                Camera.Render();
+                Camera.RenderConsole();
 
                 proje.Loop();
             }

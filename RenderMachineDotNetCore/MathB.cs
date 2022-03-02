@@ -9,7 +9,7 @@ namespace RenderMachineDotNetCore
     public static class MathB
     {
         #region Varuabels
-        public static double[] Sins
+        public static double[] Sin
         {
             get;
         } =
@@ -376,7 +376,7 @@ namespace RenderMachineDotNetCore
 -0.01745240643728356,
 0.0
         };
-        public static double[] Coss
+        public static double[] Cos
         {
             get;
         } =
@@ -838,17 +838,20 @@ namespace RenderMachineDotNetCore
                 (int)RadianToDegree(Math.Acos(GetCloseToZero(Pos.y / Distance(new position(0, 0, 0), Pos)))), 
                 (int)RadianToDegree(Math.Atan2(GetCloseToZero(Pos.x), GetCloseToZero(Pos.z))));
 
+            DefaultFuncs.Log(rot.ToString());
+
             return rot;
         }
 
         public static position SphereToCartesien(rotation rot, double r)
         {
             rotation Azimut = new rotation(0, rot.y + ((rot.x > 270) ? (0) : ((rot.x > 90) ? (180) : (0))), 0);
+            //rotation Azimut = rot;
             int Zenit = rot.x;
 
-            double X = r * (Sins[Zenit]) * Sins[Azimut.y];
-            double Y = r * Coss[Zenit];
-            double Z = r * (Sins[Zenit]) * Coss[Azimut.y];
+            double X = r * (Sin[Zenit]) * Sin[Azimut.y] * (Cos[Zenit] < 0 ? -1.0 : 1.0);
+            double Y = r * Cos[Zenit];
+            double Z = r * (Sin[Zenit]) * Cos[Azimut.y] * (Cos[Zenit] < 0 ? -1.0 : 1.0);
 
             position pos = new position(
                 X,

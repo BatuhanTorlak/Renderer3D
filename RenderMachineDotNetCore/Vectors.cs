@@ -169,12 +169,16 @@ namespace RenderMachineDotNetCore
 
     public struct Color
     {
+        public static bool operator ==(Color a, Color b) { return a.Red == b.Red && a.Blue == b.Blue && a.Green == b.Green && a.getTransparency() == b.getTransparency(); }
+        public static bool operator !=(Color a, Color b) { return !(a == b); }
+
         public static Color operator +(Color a, Color b) => new Color(
             (byte)(a.Red * a.Transparency + b.Red * b.Transparency), 
             (byte)(a.Green * a.Transparency + b.Green * b.Transparency), (byte)(a.Blue * a.Transparency + b.Blue * b.Transparency), 
             (byte)MathB.GetBigger(a.getTransparency(), b.getTransparency())
             );
 
+        private byte _transparency;
         public byte Red;
         public byte Blue;
         public byte Green;
@@ -182,11 +186,11 @@ namespace RenderMachineDotNetCore
         {
             set
             {
-                Transparency = (byte)(value / byte.MaxValue / 100);
+                _transparency = (byte)(value / byte.MaxValue / 100);
             }
             get
             {
-                return Transparency;
+                return _transparency;
             }
         }
 
@@ -195,32 +199,31 @@ namespace RenderMachineDotNetCore
             Red = r;
             Green = g;
             Blue = b;
-            Transparency = t;
+            _transparency = (byte)(t / byte.MaxValue / 100);
         }
 
         public byte getTransparency()
         {
-            return (byte)(Transparency * byte.MaxValue / 100);
+            return (byte)(_transparency * byte.MaxValue / 100);
         }
     }
 
     public class Triangle
     {
         public Point[] verticals = new Point[3];
-        public byte transparency;
-        public byte[] color;
+        public Color color;
+
+        public Triangle(Point px, Point py, Point pz, Color colors)
+        {
+            verticals = new Point[3] { px, py, pz };
+            color = colors;
+        }
 
         public Triangle(Point px, Point py, Point pz)
         {
-            this.verticals = new Point[3] { px, py, pz };
-            transparency = byte.MaxValue;
-        }
-
-        public Triangle(Point px, Point py, Point pz, byte trs, byte[] colors)
-        {
-            this.verticals = new Point[3] { px, py, pz };
-            transparency = trs;
-            color = colors;
+            Triangle tri = new Triangle(px, py, pz, new Color(255, 255, 255, 255));
+            verticals = tri.verticals;
+            color = tri.color;
         }
 
         public void SetVerticals(Point px, Point py, Point pz)
